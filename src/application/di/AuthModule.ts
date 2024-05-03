@@ -9,10 +9,15 @@ import { HttpJwtStrategy } from '@application/api/auth/passport/HttpJwtStrategy'
 import { HttpLocalStrategy } from '@application/api/auth/passport/HttpLocalStrategy';
 import { ApiServerConfig } from '@infrastructure/config/ApiServerConfig';
 import { ConfigurationModule } from './ConfigurationModule';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from '@core/domain/user/entity/User';
+import { UserDITokens } from '@core/domain/user/di/UserDITokens';
+import { MongooseUserRepositoryAdapter } from '@infrastructure/adapter/persistence/mongoose/repository/MongooseUserRepositoryAdapter';
 
 @Global()
 @Module({
   imports: [
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigurationModule],
@@ -28,6 +33,7 @@ import { ConfigurationModule } from './ConfigurationModule';
   ],
 
   controllers: [AuthController],
-  providers: [HttpAuthService, HttpLocalStrategy, HttpJwtStrategy],
+  providers: [HttpAuthService, HttpLocalStrategy, HttpJwtStrategy, { provide: UserDITokens.UserRepository, useClass: MongooseUserRepositoryAdapter }],
+  exports: [UserDITokens.UserRepository],
 })
 export class AuthModule {}

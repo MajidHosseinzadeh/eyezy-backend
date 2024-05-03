@@ -15,11 +15,12 @@ export class AuthController {
   
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(HttpLocalAuthGuard)
+  // @UseGuards(HttpLocalAuthGuard)
   @ApiBody({type: HttpRestApiModelLogInBody})
   @ApiResponse({status: HttpStatus.OK, type: HttpRestApiResponseLoggedInUser})
   public async login(@Req() request: HttpRequestWithUser): Promise<CoreApiResponse<HttpLoggedInUser>> {
-    return CoreApiResponse.success(this.authService.login(request.user));
+    console.log(request.body)
+    return CoreApiResponse.success(this.authService.login(request.body));
   }
   
 }

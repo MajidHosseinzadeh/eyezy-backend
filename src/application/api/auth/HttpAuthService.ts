@@ -22,7 +22,7 @@ export class HttpAuthService {
     if (user) {
       const isPasswordValid: boolean | null = await user.comparePassword(password);
       if (isPasswordValid) {
-        return { phone: user.getPhone(), role: user.getRole() };
+        return { phone: user.getPhone(), code: user.getId(), role: user.getRole() };
       }
     }
 
@@ -38,6 +38,7 @@ export class HttpAuthService {
   }
 
   public async getUser(by: { phone: number }): Promise<User | undefined> {
+    console.log(this.userRepository)
     return this.userRepository.findUser({ phone: by.phone });
   }
 }

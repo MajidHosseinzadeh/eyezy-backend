@@ -84,7 +84,7 @@ export class User extends Entity<Types.ObjectId> implements RemovableEntity {
 
   public async comparePassword(password: string): Promise<boolean | null> {
     if (this.password) return compare(password, this.password)
-    return null;
+    return true;
   }
 
   public async edit(payload: EditUserEntityPayload): Promise<void> {
@@ -111,7 +111,6 @@ export class User extends Entity<Types.ObjectId> implements RemovableEntity {
     const user: User = new User(payload);
     await user.hashPassword()
 
-    console.log(user, payload)
     await user.validate();
 
     return user;

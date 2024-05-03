@@ -26,7 +26,7 @@ export class HttpJwtStrategy extends PassportStrategy(Strategy) {
       Exception.new({code: Code.UNAUTHORIZED_ERROR})
     );
   
-    return {phone: user.getPhone(), role: user.getRole()};
+    return {phone: user.getPhone(), code: user.getId(), role: user.getRole()};
   }
   
 }

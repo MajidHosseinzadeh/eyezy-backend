@@ -11,7 +11,6 @@ export class CreateUserService implements CreateUserUseCase {
   constructor(private readonly userRepository: UserRepositoryPort) {}
 
   public async execute(payload: CreateUserPort): Promise<UserUseCaseDto> {
-    console.log(this.userRepository);
     const doesUserExist: boolean = !!(await this.userRepository.countUsers({
       phone: payload.phone,
     }));
