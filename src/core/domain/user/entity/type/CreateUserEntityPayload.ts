@@ -1,4 +1,5 @@
 import { UserRole } from '@core/common/enums/UserEnums';
+import { ObjectId } from 'mongoose';
 
 export type CreateUserEntityPayload = {
   phone: number;
@@ -6,7 +7,6 @@ export type CreateUserEntityPayload = {
   lastName: string | null;
   role: UserRole;
   password: string | null;
-  id?: string;
   createdAt?: Date;
   editedAt?: Date | null;
   removedAt?: Date | null;

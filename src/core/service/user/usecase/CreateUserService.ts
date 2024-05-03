@@ -11,8 +11,7 @@ export class CreateUserService implements CreateUserUseCase {
   constructor(private readonly userRepository: UserRepositoryPort) {}
 
   public async execute(payload: CreateUserPort): Promise<UserUseCaseDto> {
-    console.log(this.userRepository)
-    // console.log(await this.userRepository.findById("asasasas"))
+    console.log(this.userRepository);
     const doesUserExist: boolean = !!(await this.userRepository.countUsers({
       phone: payload.phone,
     }));
@@ -21,7 +20,7 @@ export class CreateUserService implements CreateUserUseCase {
       Exception.new({
         code: Code.ENTITY_ALREADY_EXISTS_ERROR,
         overrideMessage: 'User already exists.',
-      }),
+      })
     );
 
     const user: User = await User.new({
@@ -32,8 +31,7 @@ export class CreateUserService implements CreateUserUseCase {
       password: payload.password || null,
     });
 
-    await this.userRepository.addUser(user);
-
+    const useradd = await this.userRepository.addUser(user);
     return UserUseCaseDto.newFromUser(user);
   }
 }

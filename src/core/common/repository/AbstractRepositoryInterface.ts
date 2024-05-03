@@ -1,4 +1,4 @@
-import { QueryOptions, UpdateWriteOpResult } from 'mongoose';
+import { QueryOptions, Types, UpdateWriteOpResult } from 'mongoose';
 import { Document, FilterQuery, PopulateOptions, UpdateQuery } from 'mongoose';
 
 export interface IAbstractRepository<T extends Document> {
@@ -18,7 +18,7 @@ export interface IAbstractRepository<T extends Document> {
 
   findOneAndDelete(filterQuery: FilterQuery<T>): any;
 
-  findByIdAndDelete(id: string): any;
+  findByIdAndDelete(id: Types.ObjectId): any;
 
   deleteMany(filterQuery: FilterQuery<T>): Promise<boolean>;
 

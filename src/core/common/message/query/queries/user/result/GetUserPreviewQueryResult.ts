@@ -1,20 +1,21 @@
 import { UserRole } from '@core/common/enums/UserEnums';
+import { ObjectId, Types } from 'mongoose';
 
 export class GetUserPreviewQueryResult {
   
-  public readonly id: string;
+  public readonly id: Types.ObjectId;
   
   public readonly name: string;
   
   public readonly role: UserRole;
   
-  constructor(id: string, name: string, role: UserRole) {
+  constructor(id: Types.ObjectId, name: string, role: UserRole) {
     this.id = id;
     this.name = name;
     this.role = role;
   }
   
-  public static new(id: string, name: string, role: UserRole): GetUserPreviewQueryResult {
+  public static new(id: Types.ObjectId, name: string, role: UserRole): GetUserPreviewQueryResult {
     return new GetUserPreviewQueryResult(id, name, role);
   }
   

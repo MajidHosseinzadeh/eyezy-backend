@@ -9,9 +9,7 @@ export class MongooseUserMapper {
       lastName: domainUser.getLastName(),
       role: domainUser.getRole(),
       password: domainUser.getPassword(),
-      createdAt: domainUser.getCreatedAt(),
-      editedAt: domainUser.getEditedAt(),
-      removedAt: domainUser.getRemovedAt(),
+      removed_at: domainUser.getRemovedAt(),
     });
   }
 
@@ -26,7 +24,7 @@ export class MongooseUserMapper {
       lastName: mongooseUser.lastName,
       role: mongooseUser.role,
       password: mongooseUser.password,
-      id: mongooseUser._id,
+      // id: mongooseUser._id,
       createdAt: mongooseUser.createdAt,
       editedAt: mongooseUser.editedAt,
       removedAt: mongooseUser.removedAt,

@@ -34,7 +34,7 @@ export abstract class AbstractRepository<TDocument extends Document> implements 
     return null
   }
 
-  async findById(id: string, lean: boolean = true): Promise<TDocument | null> {
+  async findById(id: Types.ObjectId, lean: boolean = true): Promise<TDocument | null> {
     const document = await this.model.findById(id, {}, { lean });
     return document;
   }
@@ -44,7 +44,7 @@ export abstract class AbstractRepository<TDocument extends Document> implements 
     return document;
   }
 
-  async findByIdAndUpdate(id: string, updateQuery: UpdateQuery<TDocument>): Promise<TDocument | null> {
+  async findByIdAndUpdate(id: Types.ObjectId, updateQuery: UpdateQuery<TDocument>): Promise<TDocument | null> {
     const document = await this.model.findByIdAndUpdate(id, updateQuery, { new: true });
     return document;
   }
@@ -68,7 +68,7 @@ export abstract class AbstractRepository<TDocument extends Document> implements 
     return deletedResult.deletedCount >= 1;
   }
 
-  async findByIdAndDelete(id: string) {
+  async findByIdAndDelete(id: Types.ObjectId) {
     return await this.model.findByIdAndDelete(id);
   }
 

@@ -2,8 +2,9 @@ import { Code } from '@core/common/code/Code';
 import { Exception } from '@core/common/exception/Exception';
 import { Optional } from '@core/common/type/CommonTypes';
 import { ClassValidationDetails, ClassValidator } from '@core/common/util/class-validator/ClassValidator';
+import { ObjectId, Types } from 'mongoose';
 
-export class Entity<TIdentifier extends string | number> {
+export class Entity<TIdentifier extends string | number | Types.ObjectId> {
   protected id: Optional<TIdentifier>;
 
   public getId(): TIdentifier {

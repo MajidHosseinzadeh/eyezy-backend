@@ -3,12 +3,13 @@ import { IsNullable } from '@core/common/util/decorator/IsNullable';
 import { User } from '@core/domain/user/entity/User';
 import { Exclude, Expose, plainToClass } from 'class-transformer';
 import { IsNumber, IsString } from 'class-validator';
+import { Types } from 'mongoose';
 
 @Exclude()
 export class UserUseCaseDto {
   @Expose()
   @IsString()
-  public id: string;
+  public id: Types.ObjectId;
 
   @Expose()
   @IsNumber()

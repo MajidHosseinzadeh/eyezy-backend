@@ -6,33 +6,45 @@ import { CreateUserEntityPayload } from '@core/domain/user/entity/type/CreateUse
 import { EditUserEntityPayload } from '@core/domain/user/entity/type/EditUserEntityPayload';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { compare, genSalt, hash } from 'bcryptjs';
-import { IsDate, IsEmail, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { HydratedDocument, model } from 'mongoose';
-import { v4 } from 'uuid';
+import mongoose, { HydratedDocument, ObjectId, Types, model } from 'mongoose';
 
-export class User extends Entity<string> implements RemovableEntity {
-  
-  private phone    : number       ;
-  private firstName: string | null;
-  private lastName : string | null;
-  private role     : UserRole     ;
-  private password : string | null;
-  private createdAt: Date         ;
-  private editedAt : Date   | null;
-  private removedAt: Date   | null;
+@Schema({
+  timestamps: {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+  },
+  toJSON: {
+    transform: function (doc, ret, options) {
+      // delete ret.password;
+      // delete ret.__v;
+      return ret;
+    }
+  }
+})
+export class User extends Entity<Types.ObjectId> implements RemovableEntity {
+  @Prop({ type: mongoose.Schema.Types.Number, required: true })
+  private phone     : number       ;
+  @Prop({ type: mongoose.Schema.Types.String, required: false })
+  private firstName : string | null;
+  @Prop({ type: mongoose.Schema.Types.String, required: false })
+  private lastName  : string | null;
+  @Prop({ type: mongoose.Schema.Types.String, required: true, default: UserRole.CUSTOMER, enum: UserRole })
+  private role      : UserRole     ;
+  @Prop({ type: mongoose.Schema.Types.String, required: false })
+  private password  : string | null;
+  @Prop({ type: mongoose.Schema.Types.Date, required: false })
+  private removed_at: Date   | null;
 
 
   constructor(payload: CreateUserEntityPayload) {
     super();
-    this.phone     = payload.phone                  ;
-    this.firstName = payload.firstName || null      ;
-    this.lastName  = payload.lastName  || null      ;
-    this.role      = payload.role                   ;
-    this.password  = payload.password  || null      ;
-    this.id        = payload.id        || v4()      ;
-    this.createdAt = payload.createdAt || new Date();
-    this.editedAt  = payload.editedAt  || null      ;
-    this.removedAt = payload.removedAt || null      ;
+    this.phone      = payload.phone                            ;
+    this.firstName  = payload.firstName || null                ;
+    this.lastName   = payload.lastName  || null                ;
+    this.role       = payload.role                             ;
+    this.password   = payload.password  || null                ;
+    this.id         = new Types.ObjectId();
+    this.removed_at = payload.removedAt || null                ;
   }
 
   public getPhone(): number {
@@ -59,16 +71,8 @@ export class User extends Entity<string> implements RemovableEntity {
     return this.password;
   }
 
-  public getCreatedAt(): Date {
-    return this.createdAt;
-  }
-
-  public getEditedAt(): Date | null {
-    return this.editedAt;
-  }
-
   public getRemovedAt(): Date | null {
-    return this.removedAt;
+    return this.removed_at;
   }
 
   public async hashPassword(): Promise<void> {
@@ -88,29 +92,32 @@ export class User extends Entity<string> implements RemovableEntity {
 
     if (payload.firstName) {
       this.firstName = payload.firstName;
-      this.editedAt = currentDate;
+      // this.editedAt = currentDate;
     }
     if (payload.lastName) {
       this.lastName = payload.lastName;
-      this.editedAt = currentDate;
+      // this.editedAt = currentDate;
     }
 
     await this.validate();
   }
 
   public async remove(): Promise<void> {
-    this.removedAt = new Date();
+    this.removed_at = new Date();
     await this.validate();
   }
 
   public static async new(payload: CreateUserEntityPayload): Promise<User> {
     const user: User = new User(payload);
-    await user.hashPassword();
+    await user.hashPassword()
+
+    console.log(user, payload)
     await user.validate();
 
     return user;
   }
 }
+
 
 export type UserDocument = HydratedDocument<User>;
 export const UserSchema = SchemaFactory.createForClass(User);

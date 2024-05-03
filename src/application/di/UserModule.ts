@@ -1,6 +1,6 @@
 import { Module, Provider } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserSchema } from '@core/domain/user/entity/User';
+import { User, UserSchema } from '@core/domain/user/entity/User';
 import { UserDITokens } from '@core/domain/user/di/UserDITokens';
 import { MongooseUserRepositoryAdapter } from '@infrastructure/adapter/persistence/mongoose/repository/MongooseUserRepositoryAdapter';
 import { CreateUserService } from '@core/service/user/usecase/CreateUserService';
@@ -37,7 +37,7 @@ const handleRepository: Provider[] = [
 ]
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'User', schema: UserSchema }])],
+  imports: [MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],
   controllers: [UserController],
   providers: [
     ...useCaseProviders,

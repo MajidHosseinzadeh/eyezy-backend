@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { Model, ObjectId, Types } from 'mongoose';
 import { UserRepositoryPort } from '@core/domain/user/port/persistence/UserRepositoryPort';
 import { Nullable, Optional } from '@core/common/type/CommonTypes';
 import { RepositoryFindOptions } from '@core/common/persistence/RepositoryOptions';
@@ -22,7 +22,7 @@ export class MongooseUserRepositoryAdapter extends AbstractRepository<UserDocume
       query.where('phone', by.phone);
     }
     if (!options.includeRemoved) {
-      query.where('removedAt', null);
+      query.where('removed_at', null);
     }
 
     const document = await query.exec();
@@ -31,8 +31,6 @@ export class MongooseUserRepositoryAdapter extends AbstractRepository<UserDocume
 
   public async countUsers(by: { phone?: number; email?: string }, options: RepositoryFindOptions = {}): Promise<number> {
     const conditions: any = {};
-    console.log("first")
-    console.log(this.userModel)
     if (by.phone) {
       conditions.phone = by.phone;
     }
@@ -41,15 +39,15 @@ export class MongooseUserRepositoryAdapter extends AbstractRepository<UserDocume
     }
 
     if (!options.includeRemoved) {
-      conditions.removedAt = null;
+      conditions.removed_at = null;
     }
     return this.userModel.countDocuments(conditions).exec();
   }
 
-  public async addUser(user: User): Promise<{ id: string }> {
+  public async addUser(user: User): Promise<{ id: Types.ObjectId }> {
     const newUser = new this.userModel(user);
     const savedUser = await newUser.save();
-    return { id: savedUser._id.toString() };
+    return { id: savedUser._id };
   }
 
   public async updateUser(user: User): Promise<void> {

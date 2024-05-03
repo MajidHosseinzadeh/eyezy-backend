@@ -1,14 +1,14 @@
 import { UserRole } from '@core/common/enums/UserEnums';
 import { Nullable } from '@core/common/type/CommonTypes';
 import { Prop } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 class UserModel extends Document {
   @Prop({ type: Number, required: true })
   phone: number;
 
   @Prop({ type: String, required: true })
-  id: string;
+  id: Types.ObjectId;
 
   @Prop({ type: String, required: false })
   firstName: string | null;
