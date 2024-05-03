@@ -1,20 +1,28 @@
 import { UserRole } from '@core/common/enums/UserEnums';
+import { IsNullable } from '@core/common/util/decorator/IsNullable';
 import { User } from '@core/domain/user/entity/User';
 import { Exclude, Expose, plainToClass } from 'class-transformer';
+import { IsNumber, IsString } from 'class-validator';
 
 @Exclude()
 export class UserUseCaseDto {
   @Expose()
+  @IsString()
   public id: string;
 
   @Expose()
-  public firstName: string;
+  @IsNumber()
+  public phone: number;
 
   @Expose()
-  public lastName: string;
+  @IsNullable()
+  @IsString()
+  public firstName: string | null;
 
   @Expose()
-  public email: string;
+  @IsNullable()
+  @IsString()
+  public lastName: string | null;
 
   @Expose()
   public role: UserRole;

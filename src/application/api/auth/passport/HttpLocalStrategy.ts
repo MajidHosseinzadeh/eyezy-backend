@@ -1,5 +1,5 @@
-import { HttpAuthService } from '@application/api/http-rest/auth/HttpAuthService';
-import { HttpUserPayload } from '@application/api/http-rest/auth/type/HttpAuthTypes';
+import { HttpAuthService } from '@application/api/auth/HttpAuthService';
+import { HttpUserPayload } from '@application/api/auth/type/HttpAuthTypes';
 import { Code } from '@core/common/code/Code';
 import { Exception } from '@core/common/exception/Exception';
 import { CoreAssert } from '@core/common/util/assert/CoreAssert';
@@ -18,9 +18,9 @@ export class HttpLocalStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  public async validate(username: string, password: string): Promise<HttpUserPayload> {
+  public async validate(phone: number, password: string): Promise<HttpUserPayload> {
     const user: HttpUserPayload = CoreAssert.notEmpty(
-      await this.authService.validateUser(username, password),
+      await this.authService.validateUser(phone, password),
       Exception.new({ code: Code.WRONG_CREDENTIALS_ERROR })
     );
 

@@ -2,11 +2,11 @@ import { Module, Global } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { AuthController } from '@application/api/http-rest/controller/AuthController';
+import { AuthController } from '@application/api/controller/AuthController';
 import { UserModule } from '@application/di/UserModule';
-import { HttpAuthService } from '@application/api/http-rest/auth/HttpAuthService';
-import { HttpJwtStrategy } from '@application/api/http-rest/auth/passport/HttpJwtStrategy';
-import { HttpLocalStrategy } from '@application/api/http-rest/auth/passport/HttpLocalStrategy';
+import { HttpAuthService } from '@application/api/auth/HttpAuthService';
+import { HttpJwtStrategy } from '@application/api/auth/passport/HttpJwtStrategy';
+import { HttpLocalStrategy } from '@application/api/auth/passport/HttpLocalStrategy';
 import { ApiServerConfig } from '@infrastructure/config/ApiServerConfig';
 import { ConfigurationModule } from './ConfigurationModule';
 

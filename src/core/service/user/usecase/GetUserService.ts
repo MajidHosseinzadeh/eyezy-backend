@@ -12,7 +12,7 @@ export class GetUserService implements GetUserUseCase {
 
   public async execute(payload: GetUserPort): Promise<UserUseCaseDto> {
     const user: Optional<User> = await this.userRepository.findUser({
-      id: payload.userId,
+      phone: payload.phone,
     });
     if (!user) {
       throw Exception.new({

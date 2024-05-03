@@ -7,16 +7,19 @@ import { RepositoryFindOptions } from '@core/common/persistence/RepositoryOption
 import { User, UserDocument } from '@core/domain/user/entity/User';
 import UserModel from '../entity/user/UserModel';
 import { MongooseUserMapper } from '../entity/user/mapper/UserModelMapper';
+import { AbstractRepository } from '@core/common/repository/AbstractRepository';
 
 @Injectable()
-export class MongooseUserRepositoryAdapter implements UserRepositoryPort {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+export class MongooseUserRepositoryAdapter extends AbstractRepository<UserDocument> implements UserRepositoryPort {
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {
+    super(userModel);
+  }
 
-  public async findUser(by: { id?: string; email?: string }, options: RepositoryFindOptions = {}): Promise<Optional<User>> {
+  public async findUser(by: { phone?: number }, options: RepositoryFindOptions = {}): Promise<Optional<User>> {
     const query = this.userModel.findOne();
 
-    if (by.id) {
-      query.where('_id', by.id);
+    if (by.phone) {
+      query.where('phone', by.phone);
     }
     if (!options.includeRemoved) {
       query.where('removedAt', null);
@@ -26,11 +29,12 @@ export class MongooseUserRepositoryAdapter implements UserRepositoryPort {
     return document ? document.toObject() : undefined;
   }
 
-  public async countUsers(by: { id?: string; email?: string }, options: RepositoryFindOptions = {}): Promise<number> {
+  public async countUsers(by: { phone?: number; email?: string }, options: RepositoryFindOptions = {}): Promise<number> {
     const conditions: any = {};
-
-    if (by.id) {
-      conditions._id = by.id;
+    console.log("first")
+    console.log(this.userModel)
+    if (by.phone) {
+      conditions.phone = by.phone;
     }
     if (by.email) {
       conditions.email = by.email;
@@ -39,7 +43,6 @@ export class MongooseUserRepositoryAdapter implements UserRepositoryPort {
     if (!options.includeRemoved) {
       conditions.removedAt = null;
     }
-
     return this.userModel.countDocuments(conditions).exec();
   }
 

@@ -1,5 +1,5 @@
-import { HttpAuthService } from '@application/api/http-rest/auth/HttpAuthService';
-import { HttpJwtPayload, HttpUserPayload } from '@application/api/http-rest/auth/type/HttpAuthTypes';
+import { HttpAuthService } from '@application/api/auth/HttpAuthService';
+import { HttpJwtPayload, HttpUserPayload } from '@application/api/auth/type/HttpAuthTypes';
 import { Code } from '@core/common/code/Code';
 import { Exception } from '@core/common/exception/Exception';
 import { CoreAssert } from '@core/common/util/assert/CoreAssert';
@@ -22,11 +22,11 @@ export class HttpJwtStrategy extends PassportStrategy(Strategy) {
   
   public async validate(payload: HttpJwtPayload): Promise<HttpUserPayload> {
     const user: User = CoreAssert.notEmpty(
-      await this.authService.getUser({id: payload.id}),
+      await this.authService.getUser({phone: payload.phone}),
       Exception.new({code: Code.UNAUTHORIZED_ERROR})
     );
   
-    return {id: user.getId(), role: user.getRole()};
+    return {phone: user.getPhone(), role: user.getRole()};
   }
   
 }

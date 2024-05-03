@@ -1,52 +1,49 @@
-import { UserController } from '@application/api/http-rest/controller/UserController';
+import { Module, Provider } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { UserSchema } from '@core/domain/user/entity/User';
 import { UserDITokens } from '@core/domain/user/di/UserDITokens';
-import { HandleGetUserPreviewQueryService } from '@core/service/user/handler/HandleGetUserPreviewQueryService';
+import { MongooseUserRepositoryAdapter } from '@infrastructure/adapter/persistence/mongoose/repository/MongooseUserRepositoryAdapter';
 import { CreateUserService } from '@core/service/user/usecase/CreateUserService';
 import { GetUserService } from '@core/service/user/usecase/GetUserService';
-import { MongooseUserRepositoryAdapter } from '@infrastructure/adapter/persistence/mongoose/repository/MongooseUserRepositoryAdapter';
+import { HandleGetUserPreviewQueryService } from '@core/service/user/handler/HandleGetUserPreviewQueryService';
 import { NestWrapperGetUserPreviewQueryHandler } from '@infrastructure/handler/user/NestWrapperGetUserPreviewQueryHandler';
-import { Module, Provider } from '@nestjs/common';
-
-const persistenceProviders: Provider[] = [
-  {
-    provide   : UserDITokens.UserRepository,
-    useFactory: connection => connection?.getCustomRepository(MongooseUserRepositoryAdapter),
-  }
-];
+import { UserController } from '@application/api/controller/UserController';
+import { UserRepositoryPort } from '@core/domain/user/port/persistence/UserRepositoryPort';
 
 const useCaseProviders: Provider[] = [
   {
-    provide   : UserDITokens.CreateUserUseCase,
-    useFactory: (userRepository) => new CreateUserService(userRepository),
-    inject    : [UserDITokens.UserRepository]
+    provide: UserDITokens.CreateUserUseCase,
+    useFactory: (userRepository: UserRepositoryPort) => new CreateUserService(userRepository),
+    inject: [UserDITokens.UserRepository],
   },
   {
-    provide   : UserDITokens.GetUserUseCase,
-    useFactory: (userRepository) => new GetUserService(userRepository),
-    inject    : [UserDITokens.UserRepository]
+    provide: UserDITokens.GetUserUseCase,
+    useFactory: (userRepository: UserRepositoryPort) => new GetUserService(userRepository),
+    inject: [UserDITokens.UserRepository],
   },
 ];
 
 const handlerProviders: Provider[] = [
   NestWrapperGetUserPreviewQueryHandler,
   {
-    provide   : UserDITokens.GetUserPreviewQueryHandler,
-    useFactory: (userRepository) => new HandleGetUserPreviewQueryService(userRepository),
-    inject    : [UserDITokens.UserRepository]
-  }
+    provide: UserDITokens.GetUserPreviewQueryHandler,
+    useFactory: (userRepository: UserRepositoryPort) => new HandleGetUserPreviewQueryService(userRepository),
+    inject: [UserDITokens.UserRepository],
+  },
 ];
 
+const handleRepository: Provider[] = [
+  { provide: UserDITokens.UserRepository, useClass: MongooseUserRepositoryAdapter }
+]
+
 @Module({
-  controllers: [
-    UserController
-  ],
+  imports: [MongooseModule.forFeature([{ name: 'User', schema: UserSchema }])],
+  controllers: [UserController],
   providers: [
-    ...persistenceProviders,
     ...useCaseProviders,
     ...handlerProviders,
+    ...handleRepository,
   ],
-  exports: [
-    UserDITokens.UserRepository
-  ]
+  exports: [UserDITokens.UserRepository],
 })
 export class UserModule {}

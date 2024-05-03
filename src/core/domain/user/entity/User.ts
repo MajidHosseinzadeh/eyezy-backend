@@ -6,57 +6,44 @@ import { CreateUserEntityPayload } from '@core/domain/user/entity/type/CreateUse
 import { EditUserEntityPayload } from '@core/domain/user/entity/type/EditUserEntityPayload';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { compare, genSalt, hash } from 'bcryptjs';
-import { IsDate, IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
-import { HydratedDocument } from 'mongoose';
+import { IsDate, IsEmail, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import { HydratedDocument, model } from 'mongoose';
 import { v4 } from 'uuid';
 
-@Schema()
 export class User extends Entity<string> implements RemovableEntity {
-  @Prop({ required: true })
-  @IsString()
-  private firstName: string;
+  
+  private phone    : number       ;
+  private firstName: string | null;
+  private lastName : string | null;
+  private role     : UserRole     ;
+  private password : string | null;
+  private createdAt: Date         ;
+  private editedAt : Date   | null;
+  private removedAt: Date   | null;
 
-  @Prop({ required: true })
-  @IsString()
-  private lastName: string;
-
-  @Prop({ required: true, enum: UserRole })
-  @IsEnum(UserRole)
-  private readonly role: UserRole;
-
-  @Prop({ required: true })
-  @IsString()
-  private password: string;
-
-  @Prop({ default: Date.now })
-  private readonly createdAt: Date;
-
-  @Prop({ type: Date, default: null })
-  @IsOptional()
-  private editedAt: Date | null;
-
-  @Prop({ type: Date, default: null })
-  @IsOptional()
-  private removedAt: Date | null;
 
   constructor(payload: CreateUserEntityPayload) {
     super();
-
-    this.firstName = payload.firstName;
-    this.lastName = payload.lastName;
-    this.role = payload.role;
-    this.password = payload.password;
-    this.id = payload.id || v4();
+    this.phone     = payload.phone                  ;
+    this.firstName = payload.firstName || null      ;
+    this.lastName  = payload.lastName  || null      ;
+    this.role      = payload.role                   ;
+    this.password  = payload.password  || null      ;
+    this.id        = payload.id        || v4()      ;
     this.createdAt = payload.createdAt || new Date();
-    this.editedAt = payload.editedAt || null;
-    this.removedAt = payload.removedAt || null;
+    this.editedAt  = payload.editedAt  || null      ;
+    this.removedAt = payload.removedAt || null      ;
   }
 
-  public getFirstName(): string {
+  public getPhone(): number {
+    return this.phone;
+  }
+
+  public getFirstName(): string | null {
     return this.firstName;
   }
 
-  public getLastName(): string {
+  public getLastName(): string | null {
     return this.lastName;
   }
 
@@ -68,7 +55,7 @@ export class User extends Entity<string> implements RemovableEntity {
     return this.role;
   }
 
-  public getPassword(): string {
+  public getPassword(): string | null {
     return this.password;
   }
 
@@ -86,13 +73,14 @@ export class User extends Entity<string> implements RemovableEntity {
 
   public async hashPassword(): Promise<void> {
     const salt: string = await genSalt();
-    this.password = await hash(this.password, salt);
+    if (this.password) this.password = await hash(this.password, salt);
 
     await this.validate();
   }
 
-  public async comparePassword(password: string): Promise<boolean> {
-    return compare(password, this.password);
+  public async comparePassword(password: string): Promise<boolean | null> {
+    if (this.password) return compare(password, this.password)
+    return null;
   }
 
   public async edit(payload: EditUserEntityPayload): Promise<void> {
@@ -126,3 +114,5 @@ export class User extends Entity<string> implements RemovableEntity {
 
 export type UserDocument = HydratedDocument<User>;
 export const UserSchema = SchemaFactory.createForClass(User);
+export const UserModel = model<UserDocument>(User.name, UserSchema);
+

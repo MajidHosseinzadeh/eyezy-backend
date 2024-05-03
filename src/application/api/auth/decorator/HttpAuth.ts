@@ -1,5 +1,5 @@
-import { HttpJwtAuthGuard } from '@application/api/http-rest/auth/guard/HttpJwtAuthGuard';
-import { HttpRoleAuthGuard } from '@application/api/http-rest/auth/guard/HttpRoleAuthGuard';
+import { HttpJwtAuthGuard } from '@application/api/auth/guard/HttpJwtAuthGuard';
+import { HttpRoleAuthGuard } from '@application/api/auth/guard/HttpRoleAuthGuard';
 import { UserRole } from '@core/common/enums/UserEnums';
 import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
 

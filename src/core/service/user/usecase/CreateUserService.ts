@@ -11,8 +11,10 @@ export class CreateUserService implements CreateUserUseCase {
   constructor(private readonly userRepository: UserRepositoryPort) {}
 
   public async execute(payload: CreateUserPort): Promise<UserUseCaseDto> {
+    console.log(this.userRepository)
+    // console.log(await this.userRepository.findById("asasasas"))
     const doesUserExist: boolean = !!(await this.userRepository.countUsers({
-      id: payload.firstName,
+      phone: payload.phone,
     }));
     CoreAssert.isFalse(
       doesUserExist,
@@ -23,10 +25,11 @@ export class CreateUserService implements CreateUserUseCase {
     );
 
     const user: User = await User.new({
-      firstName: payload.firstName,
-      lastName: payload.lastName,
+      phone: payload.phone,
+      firstName: payload.firstName || null,
+      lastName: payload.lastName || null,
       role: payload.role,
-      password: payload.password,
+      password: payload.password || null,
     });
 
     await this.userRepository.addUser(user);

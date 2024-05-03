@@ -1,4 +1,4 @@
-import { HttpRequestWithUser } from '@application/api/http-rest/auth/type/HttpAuthTypes';
+import { HttpRequestWithUser } from '@application/api/auth/type/HttpAuthTypes';
 import { Code } from '@core/common/code/Code';
 import { UserRole } from '@core/common/enums/UserEnums';
 import { Exception } from '@core/common/exception/Exception';

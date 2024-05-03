@@ -4,20 +4,23 @@ import { Prop } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 class UserModel extends Document {
-  @Prop({ required: true })
+  @Prop({ type: Number, required: true })
+  phone: number;
+
+  @Prop({ type: String, required: true })
   id: string;
 
-  @Prop({ required: true })
-  firstName: string;
+  @Prop({ type: String, required: false })
+  firstName: string | null;
 
-  @Prop({ required: true })
-  lastName: string;
+  @Prop({ type: String, required: false })
+  lastName: string | null;
 
   @Prop({ required: true, enum: UserRole })
   role: UserRole;
 
-  @Prop({ required: true })
-  password: string;
+  @Prop({ type: String, required: false })
+  password: string | null;
 
   @Prop({ type: Date, default: Date.now })
   createdAt: Date;

@@ -1,8 +1,9 @@
 import { UserRole } from '@core/common/enums/UserEnums';
 
 export interface CreateUserPort {
-  firstName: string;
-  lastName: string;
+  phone: number;
+  firstName: string | null;
+  lastName: string | null;
   role: UserRole;
-  password: string;
+  password: string | null;
 }

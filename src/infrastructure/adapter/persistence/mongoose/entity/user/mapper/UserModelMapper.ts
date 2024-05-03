@@ -4,6 +4,7 @@ import UserModel from '../UserModel';
 export class MongooseUserMapper {
   public static toMongooseEntity(domainUser: User): UserModel {
     return new UserModel({
+      phone: domainUser.getPhone(),
       firstName: domainUser.getFirstName(),
       lastName: domainUser.getLastName(),
       role: domainUser.getRole(),
@@ -20,6 +21,7 @@ export class MongooseUserMapper {
 
   public static toDomainEntity(mongooseUser: UserModel): User {
     return new User({
+      phone: mongooseUser.phone,
       firstName: mongooseUser.firstName,
       lastName: mongooseUser.lastName,
       role: mongooseUser.role,

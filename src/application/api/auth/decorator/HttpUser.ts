@@ -1,4 +1,4 @@
-import { HttpRequestWithUser } from '@application/api/http-rest/auth/type/HttpAuthTypes';
+import { HttpRequestWithUser } from '@application/api/auth/type/HttpAuthTypes';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,4 +1,4 @@
 export type EditUserEntityPayload = {
-  firstName?: string;
-  lastName?: string;
+  firstName: string | null;
+  lastName: string | null;
 };
