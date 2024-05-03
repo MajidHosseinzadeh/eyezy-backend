@@ -1,0 +1,10 @@
+{
+    "editor.defaultFormatter": null,
+    "prettier.printWidth": 150,
+    "prettier.tabWidth": 4,
+    "eslint.run": "onSave",
+    "eslint.rules.customizations": [],
+    "prettier.singleQuote": true,
+    "prettier.arrowParens": "avoid",
+    "prettier.useTabs": true
+}
