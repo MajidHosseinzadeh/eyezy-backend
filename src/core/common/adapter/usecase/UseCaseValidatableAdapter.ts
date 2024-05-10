@@ -6,6 +6,7 @@ import { ClassValidationDetails, ClassValidator } from '@core/common/util/class-
 export class UseCaseValidatableAdapter {
   public async validate(): Promise<void> {
     const details: Optional<ClassValidationDetails> = await ClassValidator.validate(this);
+    console.log(details)
     if (details) {
       throw Exception.new({
         code: Code.USE_CASE_PORT_VALIDATION_ERROR,

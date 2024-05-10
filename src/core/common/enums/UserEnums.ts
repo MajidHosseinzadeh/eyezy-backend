@@ -4,3 +4,11 @@ export enum UserRole {
   CUSTOMER = 'CUSTOMER',
   GUEST = 'GUEST',
 }
+
+export enum UserStatus {
+  NEW = 'NEW',
+  BLOCKED = 'BLOCKED',
+  VERIFIED = 'VERIFIED',
+  ACTIVE = 'ACTIVE',
+  DELETED = 'DELETED',
+}

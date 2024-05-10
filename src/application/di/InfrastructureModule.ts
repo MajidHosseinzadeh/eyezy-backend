@@ -30,14 +30,11 @@ const providers: Array<{ provide: any; useClass: Type<any> }> = [
     provide: CoreDITokens.EventBus,
     useClass: NestEventBusAdapter,
   },
-];
-
-if ('ApiServerConfig.API_LOG_ENABLE') {
-  providers.push({
+  {
     provide: APP_INTERCEPTOR,
     useClass: NestHttpLoggingInterceptor,
-  });
-}
+  }
+];
 
 @Global()
 @Module({
@@ -48,7 +45,7 @@ if ('ApiServerConfig.API_LOG_ENABLE') {
       inject: [DatabaseConfig],
       useFactory: async (databaseConfig: DatabaseConfig) => {
         return {
-          uri: databaseConfig.DB_URL.replace('<USERNAME>', databaseConfig.DB_USERNAME).replace('<PASSWORD>', databaseConfig?.DB_PASSWORD)?.replace('<HOST>', databaseConfig?.DB_HOST),
+          uri: databaseConfig.DB_MONGOOSE_URL,
         };
       },
     }),

@@ -29,6 +29,7 @@ export abstract class AbstractRepository<TDocument extends Document> implements 
 
   async findOne(filterQuery: FilterQuery<TDocument>, projection?: Record<string, unknown>, populate?: PopulateOptions, lean: boolean = false): Promise<TDocument | null> {
     let document = await this.model.findOne(filterQuery, { ...projection }, { lean });
+    console.log(document)
     if(document && !populate) return document
     if(document && populate) return await document.populate(populate)
     return null

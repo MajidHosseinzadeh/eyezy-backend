@@ -9,7 +9,7 @@ export interface UserRepositoryPort{
 
   countUsers(by: { phone: number }, options?: RepositoryFindOptions): Promise<number>;
 
-  addUser(user: User): Promise<{ id: Types.ObjectId }>;
+  addUser(user: User): Promise<UserDocument>;
 
   updateUser(user: User): Promise<void>;
 }

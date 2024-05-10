@@ -13,7 +13,7 @@ export class HandleGetUserPreviewQueryService implements GetUserPreviewQueryHand
 
     const user: Optional<User> = await this.userRepository.findUser(query.by, query.options);
     if (user) {
-      queryResult = GetUserPreviewQueryResult.new(user.getId(), user.getName(), user.getRole());
+      queryResult = GetUserPreviewQueryResult.new(user.getId(), user.getPhone(), user.getName(), user.getRole());
     }
 
     return queryResult;

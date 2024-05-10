@@ -1,4 +1,5 @@
 import { Code } from '@core/common/code/Code';
+import { UserStatus } from '@core/common/enums/UserEnums';
 import { Exception } from '@core/common/exception/Exception';
 import { CoreAssert } from '@core/common/util/assert/CoreAssert';
 import { User } from '@core/domain/user/entity/User';
@@ -24,13 +25,11 @@ export class CreateUserService implements CreateUserUseCase {
 
     const user: User = await User.new({
       phone: payload.phone,
-      firstName: payload.firstName || null,
-      lastName: payload.lastName || null,
       role: payload.role,
-      password: payload.password || null,
+      status: UserStatus.NEW,
     });
 
-    const useradd = await this.userRepository.addUser(user);
-    return UserUseCaseDto.newFromUser(user);
+    const createdUser = await this.userRepository.addUser(user);
+    return UserUseCaseDto.newFromUser(createdUser);
   }
 }

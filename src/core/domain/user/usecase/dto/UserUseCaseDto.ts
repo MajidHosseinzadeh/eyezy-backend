@@ -1,6 +1,6 @@
 import { UserRole } from '@core/common/enums/UserEnums';
 import { IsNullable } from '@core/common/util/decorator/IsNullable';
-import { User } from '@core/domain/user/entity/User';
+import { User, UserDocument } from '@core/domain/user/entity/User';
 import { Exclude, Expose, plainToClass } from 'class-transformer';
 import { IsNumber, IsString } from 'class-validator';
 import { Types } from 'mongoose';
@@ -28,7 +28,7 @@ export class UserUseCaseDto {
   @Expose()
   public role: UserRole;
 
-  public static newFromUser(user: User): UserUseCaseDto {
+  public static newFromUser(user: UserDocument | User): UserUseCaseDto {
     return plainToClass(UserUseCaseDto, user);
   }
 
